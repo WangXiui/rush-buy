@@ -19,19 +19,21 @@
     "default_popup": "popup/popup.html"
   },
   "background": {
+    "persistent": false,
     "scripts": [
       "background.js"
     ]
   },
   "content_scripts": [{
-    "js": ["popup/content.js"],
+    "js": ["./popup/content.js"],
     "matches": [
-      "http://*/*",
-      "https://*/*"
-    ]
+      "<all_urls>"
+    ],
+    "run_at": "document_start"
   }],
   "content_security_policy": "script-src 'self' 'unsafe-eval' http://searchapi.eastmoney.com https://push2.eastmoney.com; object-src 'self'",
   "permissions": [
+    "tabs", "activeTab", "storage", "notifications",
     "storage",
     "contextMenus",
     "http://*/*",

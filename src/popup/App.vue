@@ -83,16 +83,42 @@ import {formatCountdown} from '../utils'
       getBtn() {
         // chrome.tabs.query可以通过回调函数获得当前页面的信息tabs
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-          console.log('tabs', tabs);
+          console.log('tabs11', tabs);
+
+          let tabId = tabs.length ? tabs[0].id : null;
+          // 向当前页面注入 JavaScript 脚本
+          chrome.tabs.executeScript(tabId || null, {
+            file: 'popup/content.js'
+          }, function () {
+            // 向目标网页进行通信，向 recommend.js 发送一个消息
+            chrome.tabs.sendMessage(tabId, {
+              message: 'GET_TOPIC_INFO',
+            }, function (response) {
+              console.log('response', response);
+              // 获取到返回的文章 title 、url、description
+              // host.article.title = response.title;
+              // host.article.link = response.link;
+              // host.article.description = response.description;
+            });
+          });
+
           // 发送一个copy消息出去
-          chrome.tabs.sendMessage(tabs[0].id, { action: "copy" }, function (response) {
-            console.log('response', response);
+          /*chrome.tabs.sendMessage(tabs[0].id, { action: "copy" }, function (response) {
+            console.log('response11', response);
             // 这里的回调函数接收到了要抓取的值，获取值得操作在下方content-script.js
             // 将值存在background.js的data属性里面。
             var win = chrome.extension.getBackgroundPage();
             win.data=response;
             console.log(response);
-          });
+
+            // 监听来自content-script的消息
+            chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
+            {
+              console.log('收到来自content-script的消息：');
+              console.log(request, sender, sendResponse);
+              sendResponse('我是后台，我已收到你的消息：' + JSON.stringify(request));
+            });
+          });*/
         });
       },
       paste() {
@@ -107,12 +133,12 @@ import {formatCountdown} from '../utils'
         }
       },
       async onFinish() {
-        await this.$nextTick()
-        const ele = document.getElementsByClassName('user-info-no')[0]
-        console.log('ele', ele);
-        ele.onclick({target: ele})
-        window.dispatchEvent(ele.onclick)
-        this.$message.success('已结束！')
+        // await this.$nextTick()
+        // const ele = document.getElementsByClassName('user-info-no')[0]
+        // console.log('ele', ele);
+        // ele.onclick({target: ele})
+        // window.dispatchEvent(ele.onclick)
+        // this.$message.success('已结束！')
       },
       startTimer() {
         if (this.countdownId) return;

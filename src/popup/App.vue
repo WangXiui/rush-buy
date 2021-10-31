@@ -294,7 +294,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@import "./popup.scss";
 .popup {
   .w-10\/10 {
     width: 100%;

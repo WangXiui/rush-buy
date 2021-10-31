@@ -9,7 +9,6 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "homepage_url": "http://rabt.gitee.io/funds/docs/dist/index.html",
   "browser_action": {
     "default_icon": {
       "19": "icons/icon19.png",
@@ -19,7 +18,7 @@
     "default_popup": "popup/popup.html"
   },
   "background": {
-    "persistent": false,
+    "persistent": true,
     "scripts": [
       "background.js"
     ]
@@ -27,6 +26,7 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "permissions": [
     "tabs", "activeTab", "storage", "notifications",
+    "webNavigation",
     "storage",
     "contextMenus",
     "<all_urls>",

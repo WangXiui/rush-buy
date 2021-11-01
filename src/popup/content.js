@@ -12,7 +12,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
     window.location.reload()
   } else if (request.message === 'START_RUSH_BUY') {  // 开始抢购
     console.log('获取 title', request);
-    editInputValue()
+    // 获取设定值
+    chrome.runtime.sendMessage({ message: 'GET_SETTING_VALUE'},(response) => {
+      if (!response) return false;
+      console.log('response', response);
+      const {form} = response
+      editInputValue(form || {})
+    });
     // 获取 title
     let title = document.getElementsByTagName('title')[0].textContent;
     let descriptionEl = doc.querySelectorAll('meta[name=description]')[0];
@@ -32,29 +38,29 @@ let timerInput
 /**
  * 自动填充抢够数量
  */
-function editInputValue() {
-  const input = doc.getElementsByClassName('search-input')
+function editInputValue(form) {
+  const input = doc.querySelector('.buy-info .el-input__inner')
   console.log('自动填充抢够数量', input);
-  if (input.length > 0) {
-    input[0].value = '22222'
-    console.log('input[0].value', input[0].value);
+  if (input) {
+    input.value = form.count || '1'
+    console.log('input.value', input.value);
     // alert('input')
-    clickBtn()
+    clickBtn(form)
 
     clearInterval(timerInput)
     timerInput = null
     return
   }
   if (timerInput) return;
-  timerInput = setInterval(editInputValue, 500)
+  timerInput = setInterval(editInputValue, (1000 / form.frequency) || 100)
 }
 
 let timerClick
 /**
  * 触发按钮点击时事件
  */
-function clickBtn() {
-  const ele = doc.getElementsByClassName('avatar')
+function clickBtn(form) {
+  const ele = doc.getElementsByClassName('product-purchase-btn')
   console.log('触发按钮点击时事件', ele);
   if (ele.length > 0) {
     // alert('ele')
@@ -72,7 +78,7 @@ function clickBtn() {
     return
   }
   if (timerClick) return;
-  timerClick = setInterval(clickBtn, 500)
+  timerClick = setInterval(clickBtn, (1000 / form.frequency) || 100)
 }
 
 /**

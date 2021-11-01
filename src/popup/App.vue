@@ -21,7 +21,7 @@
           </el-time-picker>
         </el-form-item>
         <el-form-item label="抢购数量" prop="count">
-          <el-input-number class="w-10/10" v-model="form.count" :min="0" :step="10"></el-input-number>
+          <el-input-number class="w-10/10" v-model="form.count" :min="0" :step="1"></el-input-number>
         </el-form-item>
         <el-form-item label="触发频率" prop="frequency">
           <div class="flex">
@@ -58,7 +58,7 @@ export default {
         // 抢购数量
         count: 0,
         // 触发频次
-        frequency: 1,
+        frequency: 10,
       },
       // 倒计时
       countDown: '',
@@ -181,7 +181,7 @@ export default {
         isTimeUp: true,
       })
       // 刷新页面
-      this.reloadWebPage()
+      // this.reloadWebPage()
       // 监听抢购是否成功
       this.listenRushSuccess()
     },

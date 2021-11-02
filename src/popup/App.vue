@@ -47,6 +47,7 @@
 </template>
 <script>
 import {formatCountdown} from '../utils'
+import {filter} from 'lodash';
 export default {
   name: "App",
   data() {
@@ -93,17 +94,43 @@ export default {
     this.init()
   },
   activated() {
-    console.log(111);
     this.init();
   },
   beforeDestroy() {
     this.stopTimer();
   },
   methods: {
+    async init() {
+      this.getCurrentTabId(this.getShelveTime)
+    },
     /**
-     * 初始化
+     * 获取上架时间
      */
-    init() {
+    getShelveTime() {
+      const tabId = this.tabId
+      console.log('获取上架时间', tabId);
+      // 先注入脚本，然后刷新页面
+      chrome.tabs.executeScript(tabId || null, {
+        file: './popup/content.js',
+      },  (_) => {
+        let e = chrome.runtime.lastError;
+        if (e !== undefined) {
+          console.log(tabId, _, e);
+        }
+
+        chrome.tabs.sendMessage(tabId, {
+          message: 'GET_SHELVE_TIME',
+        }, (response) => {
+          if (!response) return false;
+          const {data} = response
+          this.form.deadline = _.filter(data, {fields: "shelveTime"})?.address
+        });
+      });
+    },
+    /**
+     * 倒计时回调
+     */
+    timerTask() {
       const now = new Date().getTime()
       if (this.deadlineComplete >= now) {
         this.startTimer()
@@ -118,7 +145,6 @@ export default {
     async handleSetting() {
       const valid = await this.$refs.form.validate().catch(err => console.log(err))
       if (!valid) return false
-      this.getCurrentTabId()
       this.storeConst({
         // 存储表单
         form: this.form,
@@ -131,13 +157,14 @@ export default {
     /**
      * 获取当前页面的tabId
      */
-    getCurrentTabId() {
+    getCurrentTabId(cb) {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs)=> {
         this.tabId = tabs.length ? tabs[0].id : null;
         this.storeConst({
           // 存储tabId
           tabId: this.tabId,
         })
+        cb()
       })
     },
     /**
@@ -153,7 +180,7 @@ export default {
           this.countDown = formatCountdown(this.deadlineComplete, this.config)
           // onChange(deadline - Date.now());
         }
-        this.init()
+        this.timerTask()
       }, 1000);
     },
     /**

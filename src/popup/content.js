@@ -5,17 +5,23 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
     sendResponse({
       content: '脚本注入成功。',
     });
-  } else if (request.message === 'RELOAD_WEB_PAGE') { // 页面重载
+  } else if (request.message === 'GET_SHELVE_TIME') { // 获取上架商品详情
+    const instance = document.getElementsByClassName('el-table')[0]
+    console.log('instance.data', instance.__vue__);
+    sendResponse({
+      data: instance.data,
+    });
+  }  else if (request.message === 'RELOAD_WEB_PAGE') { // 页面重载
     sendResponse({
       content: '执行重载。',
     });
     window.location.reload()
   } else if (request.message === 'START_RUSH_BUY') {  // 开始抢购
-    console.log('获取 title', request);
+    // console.log('获取 title', request);
     // 获取设定值
     chrome.runtime.sendMessage({ message: 'GET_SETTING_VALUE'},(response) => {
       if (!response) return false;
-      console.log('response', response);
+      // console.log('response', response);
       const {form} = response
       editInputValue(form || {})
     });

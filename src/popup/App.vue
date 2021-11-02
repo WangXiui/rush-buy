@@ -154,7 +154,7 @@ export default {
           // onChange(deadline - Date.now());
         }
         this.init()
-      }, 1000 / this.form.frequency);
+      }, 1000);
     },
     /**
      * 停止倒计时

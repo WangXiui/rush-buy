@@ -2,6 +2,9 @@
   <div class="popup ma16 shadow-primary bgc-FFF tal flex flex-column"
     :style="[styleObj]">
     <div class="flex-grow pa16">
+      <!--提示-->
+      <el-alert class="mb16" title="保存设置后请不要在操作当前浏览器！如果弹窗被关闭，需要重新设置一次！" type="warning" show-icon></el-alert>
+      <!--表单-->
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item prop="deadline">
           <div class="inline-block" slot="label">
@@ -27,18 +30,28 @@
             placeholder="请选择时间">
           </el-time-picker>
         </el-form-item>
-        <el-form-item label="抢购数量" prop="count">
+        <el-form-item prop="count">
+          <div class="inline-block" slot="label">
+            <span>抢购数量</span>
+            <el-tooltip effect="dark" content="用于填充采购量。" placement="top">
+              <i class="el-icon-info"></i>
+            </el-tooltip>
+          </div>
           <el-input-number class="w-10/10" v-model="form.count" :min="0" :step="1"></el-input-number>
         </el-form-item>
-        <el-form-item label="触发频率" prop="frequency">
-          <div class="flex">
-            <span>每秒</span>
-            <el-input-number class="input-suffix_percentage tal flex-grow ml8" data-unit="次" v-model="form.frequency" :controls="false" :min="1" :max="20" :step="1" :precision="0" placeholder="0~20"></el-input-number>
+
+        <el-form-item prop="frequency">
+          <div class="inline-block" slot="label">
+            <span>触发频率</span>
+            <el-tooltip effect="dark" content="每秒钟触发的次数。" placement="top">
+              <i class="el-icon-info"></i>
+            </el-tooltip>
           </div>
+          <el-input-number class="input-suffix_percentage w-10/10 tal" data-unit="次" v-model="form.frequency" :controls="false" :min="1" :max="20" :step="1" :precision="0" placeholder="0~20"></el-input-number>
         </el-form-item>
       </el-form>
       <div class="tac">
-        <el-button class="w-10/10" type="primary" round @click="handleSetting">开始倒计时</el-button>
+        <el-button class="w-10/10" type="primary" round @click="handleSetting">保存设置</el-button>
       </div>
       <!--倒计时-->
       <div class="tac flex justify-center items-center mt16" v-if="countDown">
@@ -107,6 +120,10 @@ export default {
     this.stopTimer();
   },
   methods: {
+    /**
+     * 初始化
+     * @returns {Promise<void>}
+     */
     async init() {
       this.getCurrentTabId(this.getShelveTime)
     },

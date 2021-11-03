@@ -8,6 +8,10 @@
 const instance = document.getElementsByClassName('el-table')[0] || {}
 console.log('instance.data', instance.__vue__);
 if(instance) {
-  // window.dispatchEvent(new CustomEvent("getChromeData", {detail: instance.data }))
+  // 方案一
+  /*window.dispatchEvent(new CustomEvent("getChromeData", {
+    detail: instance.__vue__.data
+  }))*/
+  // 方案二
   window.postMessage({detailData: instance.__vue__.data }, '*');
 }

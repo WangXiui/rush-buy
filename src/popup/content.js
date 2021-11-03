@@ -116,6 +116,7 @@ function sendRushSuccess(ele) {
 }
 /**
  * 向页面注入脚本
+ * @param sendResponse
  */
 function injectJs(sendResponse) {
   let scriptTag = document.createElement('script');
@@ -127,8 +128,9 @@ function injectJs(sendResponse) {
   // 放在页面不好看，执行完后移除掉
   (document.head || document.documentElement).appendChild(scriptTag);
   let res = ''
-  // window.addEventListener("getChromeData", (event) => {
-  window.addEventListener("message", (event) => {
+  // 方案一
+  /*window.addEventListener("getChromeData", (event) => {
+  // window.addEventListener("message", (event) => {
     console.log('event', event);
     if(event.data.detailData) {
       res = event.data.detailData
@@ -140,5 +142,19 @@ function injectJs(sendResponse) {
     sendResponse({
       data: []
     })
-  }, false);
+  }, false);*/
+  // 方案二
+  window.onmessage = (event) => {
+    console.log('event', event);
+    if(event.data.detailData) {
+      res = event.data.detailData
+      sendResponse({
+        data: res
+      })
+      return
+    }
+    sendResponse({
+      data: []
+    })
+  }
 }

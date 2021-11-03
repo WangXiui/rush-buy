@@ -6,11 +6,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
       content: '脚本注入成功。',
     });
   } else if (request.message === 'GET_SHELVE_TIME') { // 获取上架商品详情
-    const instance = document.getElementsByClassName('el-table')[0]
-    console.log('instance.data', instance.__vue__);
-    sendResponse({
-      data: instance.data,
-    });
+    injectJs(sendResponse)
+    return true
   }  else if (request.message === 'RELOAD_WEB_PAGE') { // 页面重载
     sendResponse({
       content: '执行重载。',
@@ -39,7 +36,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
     });
   }
 });
-
 let timerInput
 /**
  * 自动填充抢够数量
@@ -52,7 +48,6 @@ function editInputValue(form) {
     console.log('input.value', input.value);
     // alert('input')
     clickBtn(form)
-
     clearInterval(timerInput)
     timerInput = null
     return
@@ -60,7 +55,6 @@ function editInputValue(form) {
   if (timerInput) return;
   timerInput = setInterval(editInputValue, (1000 / form.frequency) || 100)
 }
-
 let timerClick
 /**
  * 触发按钮点击时事件
@@ -72,13 +66,11 @@ function clickBtn(form) {
     // alert('ele')
     // 方案一（成功）
     // ele[0].click()
-
     // 方案二（成功）
     const e = document.createEvent("MouseEvents");
     e.initEvent("click", true, true);
     ele[0].dispatchEvent(e);
     sendRushSuccess(ele)
-
     clearInterval(timerClick)
     timerClick = null
     return
@@ -86,7 +78,29 @@ function clickBtn(form) {
   if (timerClick) return;
   timerClick = setInterval(clickBtn, (1000 / form.frequency) || 100)
 }
-
+let timerConfirm
+/**
+ * 确认库存
+ */
+function confirm(form) {
+  const ele = doc.getElementsByClassName('product-confirm-btn')
+  console.log('确认库存', ele);
+  if (ele.length) {
+    // alert('ele')
+    // 方案一（成功）
+    // ele[0].click()
+    // 方案二（成功）
+    const e = document.createEvent("MouseEvents");
+    e.initEvent("click", true, true);
+    ele[0].dispatchEvent(e);
+    sendRushSuccess(ele)
+    clearInterval(timerConfirm)
+    timerConfirm = null
+    return
+  }
+  if (timerConfirm) return;
+  timerConfirm = setInterval(clickBtn, (1000 / form.frequency) || 100)
+}
 /**
  * 通知插件抢购成功
  * @param ele
@@ -99,4 +113,32 @@ function sendRushSuccess(ele) {
     if (!response) return false;
     console.log('response', response);
   })
+}
+/**
+ * 向页面注入脚本
+ */
+function injectJs(sendResponse) {
+  let scriptTag = document.createElement('script');
+  // 获得的地址类似：chrome-extension://ihcokhadfjfchaeagdoclpnjdiokfakg/js/inject.js
+  scriptTag.src = chrome.extension.getURL('js/inject.js');
+  scriptTag.onload = function() {
+    this.parentNode.removeChild(this);
+  };
+  // 放在页面不好看，执行完后移除掉
+  (document.head || document.documentElement).appendChild(scriptTag);
+  let res = ''
+  // window.addEventListener("getChromeData", (event) => {
+  window.addEventListener("message", (event) => {
+    console.log('event', event);
+    if(event.data.detailData) {
+      res = event.data.detailData
+      sendResponse({
+        data: res
+      })
+      return
+    }
+    sendResponse({
+      data: []
+    })
+  }, false);
 }

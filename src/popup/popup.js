@@ -3,6 +3,7 @@ import App from './App'
 import axios from 'axios'
 import fetchJsonp from 'fetch-jsonp'
 import {
+  Tooltip,
   TimeSelect,
   TimePicker,
   InputNumber,
@@ -19,14 +20,13 @@ import {
 import 'atomique-class'
 import '../common/reset.scss'
 import '../common/common.scss'
-
 Vue.prototype.$axios = axios
 Vue.prototype.$fetchJsonp = fetchJsonp
 Vue.prototype.$ELEMENT = { size: 'mini' }
 Vue.prototype.$message = Message;
 Vue.prototype.$loading = Loading.service
-
 Vue.use(Loading.directive)
+Vue.use(Tooltip)
 Vue.use(TimeSelect)
 Vue.use(TimePicker)
 Vue.use(InputNumber)
@@ -38,7 +38,6 @@ Vue.use(Icon)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

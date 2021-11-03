@@ -2,8 +2,14 @@
   <div class="popup ma16 shadow-primary bgc-FFF tal flex flex-column"
     :style="[styleObj]">
     <div class="flex-grow pa16">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="抢购时间" prop="deadline">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item prop="deadline">
+          <div class="inline-block" slot="label">
+            <span>抢购时间</span>
+            <el-tooltip effect="dark" content="不需要选择，自动从页面获取。" placement="top">
+              <i class="el-icon-info"></i>
+            </el-tooltip>
+          </div>
           <!--<el-time-select
               class="w-10/10"
               size="mini"
@@ -12,6 +18,7 @@
               placeholder="请选择时间">
           </el-time-select>-->
           <el-time-picker
+            disabled
             class="w-10/10"
             size="mini"
             v-model="form.deadline"
@@ -47,7 +54,7 @@
 </template>
 <script>
 import {formatCountdown} from '../utils'
-import {filter} from 'lodash';
+import {find} from 'lodash';
 export default {
   name: "App",
   data() {
@@ -108,7 +115,6 @@ export default {
      */
     getShelveTime() {
       const tabId = this.tabId
-      console.log('获取上架时间', tabId);
       // 先注入脚本，然后刷新页面
       chrome.tabs.executeScript(tabId || null, {
         file: './popup/content.js',
@@ -117,13 +123,13 @@ export default {
         if (e !== undefined) {
           console.log(tabId, _, e);
         }
-
         chrome.tabs.sendMessage(tabId, {
           message: 'GET_SHELVE_TIME',
         }, (response) => {
           if (!response) return false;
           const {data} = response
-          this.form.deadline = _.filter(data, {fields: "shelveTime"})?.address
+          this.form.deadline = new Date(find(data, {fields: "shelveTime"})?.address)
+          console.log('获取上架时间--form', this.form);
         });
       });
     },
@@ -227,7 +233,6 @@ export default {
         if (e !== undefined) {
           console.log(tabId, _, e);
         }
-
         chrome.tabs.sendMessage(tabId, {
           message: 'RELOAD_WEB_PAGE',
         }, (response) => {

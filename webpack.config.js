@@ -27,6 +27,7 @@ const config = {
   entry: {
     background: './background.js',
     'popup/content': './popup/content.js',
+    'js/inject': './js/inject.js',
     // 注意左侧不仅为output输出文件名，还包含了文件输出路径
     'popup/popup': './popup/popup.js',
   },
@@ -145,12 +146,12 @@ if (config.mode === 'production') {
 }
 
 /*if (process.env.HMR === 'true') {
-  config.plugins = (config.plugins || []).concat([
-    new ExtensionReloader({
-      manifest: path.resolve(__dirname, './src/manifest.json')
-    })
-  ])
-}*/
+ config.plugins = (config.plugins || []).concat([
+ new ExtensionReloader({
+ manifest: path.resolve(__dirname, './src/manifest.json')
+ })
+ ])
+ }*/
 
 function transformHtml (content) {
   return ejs.render(content.toString(), {

@@ -43,9 +43,10 @@ let timerInput
  */
 function editInputValue(form) {
   const input = doc.querySelector('.buy-info .el-input__inner')
-  console.log('自动填充抢够数量', input);
+  console.log('自动填充抢够数量', input, input.value);
   if (input) {
     input.value = form.count || '1'
+    console.log('form.count', typeof form.count, form.count);
     console.log('input.value', input.value);
     // alert('input')
     clickBtn(form)

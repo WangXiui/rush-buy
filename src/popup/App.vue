@@ -3,7 +3,7 @@
     :style="[styleObj]">
     <div class="flex-grow pa16">
       <!--提示-->
-      <el-alert class="mb16" title="保存设置后请不要在操作当前浏览器！如果弹窗被关闭，需要重新设置一次！" type="warning" show-icon></el-alert>
+      <el-alert class="mb16" title="保存设置后请不要在操作当前浏览器！如果弹窗被关闭，请刷新当前页面，然后点击关闭插件，重新设置一次即可！" type="warning" show-icon></el-alert>
       <!--表单-->
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item prop="deadline">
@@ -37,7 +37,7 @@
               <i class="el-icon-info"></i>
             </el-tooltip>
           </div>
-          <el-input-number class="w-10/10" v-model="form.count" :min="0" :step="1"></el-input-number>
+          <el-input-number class="w-10/10" v-model.number="form.count" :min="0" :step="1"></el-input-number>
         </el-form-item>
 
         <el-form-item prop="frequency">

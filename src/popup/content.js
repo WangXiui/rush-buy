@@ -36,6 +36,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
     });
   }
 });
+
 let timerInput
 /**
  * 自动填充抢够数量
@@ -55,13 +56,14 @@ function editInputValue(form) {
   if (timerInput) return;
   timerInput = setInterval(editInputValue, (1000 / form.frequency) || 100)
 }
+
 let timerClick
 /**
  * 触发按钮点击时事件
  */
 function clickBtn(form) {
   const ele = doc.getElementsByClassName('product-purchase-btn')
-  console.log('触发按钮点击时事件', ele);
+  console.log('触发按钮点击时事件', ele.length > 0);
   if (ele.length > 0) {
     // alert('ele')
     // 方案一（成功）
@@ -70,36 +72,40 @@ function clickBtn(form) {
     const e = document.createEvent("MouseEvents");
     e.initEvent("click", true, true);
     ele[0].dispatchEvent(e);
-    sendRushSuccess(ele)
     clearInterval(timerClick)
     timerClick = null
+    confirmCount(form)
     return
   }
   if (timerClick) return;
   timerClick = setInterval(clickBtn, (1000 / form.frequency) || 100)
 }
+
 let timerConfirm
 /**
  * 确认库存
  */
-function confirm(form) {
-  const ele = doc.getElementsByClassName('product-confirm-btn')
-  console.log('确认库存', ele);
-  if (ele.length) {
+function confirmCount(form) {
+  // 取消按钮（测试用）
+  const affirmBtn = doc.querySelector('.el-message-box__btns button:first-child')
+  // 确认按钮
+  // const ele = doc.querySelector('.btn-affirm')
+  console.log('确认库存', affirmBtn);
+  if (affirmBtn) {
     // alert('ele')
     // 方案一（成功）
     // ele[0].click()
     // 方案二（成功）
-    const e = document.createEvent("MouseEvents");
-    e.initEvent("click", true, true);
-    ele[0].dispatchEvent(e);
-    sendRushSuccess(ele)
+    const event = document.createEvent("MouseEvents");
+    event.initEvent("click", true, true);
+    affirmBtn.dispatchEvent(event);
+    sendRushSuccess(affirmBtn)
     clearInterval(timerConfirm)
     timerConfirm = null
     return
   }
   if (timerConfirm) return;
-  timerConfirm = setInterval(clickBtn, (1000 / form.frequency) || 100)
+  timerConfirm = setInterval(confirmCount, (1000 / form.frequency) || 100)
 }
 /**
  * 通知插件抢购成功
@@ -130,19 +136,19 @@ function injectJs(sendResponse) {
   let res = ''
   // 方案一
   /*window.addEventListener("getChromeData", (event) => {
-  // window.addEventListener("message", (event) => {
-    console.log('event', event);
-    if(event.data.detailData) {
-      res = event.data.detailData
-      sendResponse({
-        data: res
-      })
-      return
-    }
-    sendResponse({
-      data: []
-    })
-  }, false);*/
+   // window.addEventListener("message", (event) => {
+   console.log('event', event);
+   if(event.data.detailData) {
+   res = event.data.detailData
+   sendResponse({
+   data: res
+   })
+   return
+   }
+   sendResponse({
+   data: []
+   })
+   }, false);*/
   // 方案二
   window.onmessage = (event) => {
     console.log('event', event);

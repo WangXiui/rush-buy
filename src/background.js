@@ -25,3 +25,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ form: window.rushObj.form });
   }
 });
+
+
+/*
+ // 测试拦截请求（暂时不关注）
+ chrome.webRequest.onBeforeRequest.addListener(details => {
+ console.log('details', details);
+ }, {urls: ["<all_urls>"]}, ["blocking",'extraHeaders','requestBody']);
+ */

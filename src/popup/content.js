@@ -36,7 +36,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
     });
   }
 });
-
 let timerInput
 /**
  * 自动填充抢够数量
@@ -45,7 +44,8 @@ function editInputValue(form) {
   const input = doc.querySelector('.buy-info .el-input__inner')
   console.log('自动填充抢够数量', input, input.value);
   if (input) {
-    input.value = form.count || '1'
+    setPurchaseNum(form)
+    // input.value = form.count || '1'
     console.log('form.count', typeof form.count, form.count);
     console.log('input.value', input.value);
     // alert('input')
@@ -57,7 +57,6 @@ function editInputValue(form) {
   if (timerInput) return;
   timerInput = setInterval(editInputValue, (1000 / form.frequency) || 100)
 }
-
 let timerClick
 /**
  * 触发按钮点击时事件
@@ -81,7 +80,6 @@ function clickBtn(form) {
   if (timerClick) return;
   timerClick = setInterval(clickBtn, (1000 / form.frequency) || 100)
 }
-
 let timerConfirm
 /**
  * 确认库存
@@ -164,4 +162,21 @@ function injectJs(sendResponse) {
       data: []
     })
   }
+}
+/**
+ * 设置采购量
+ */
+function setPurchaseNum(form) {
+  let scriptTag = document.createElement('script');
+  scriptTag.src = chrome.extension.getURL('js/setPurchaseNum.js');
+  (document.head || document.documentElement).appendChild(scriptTag);
+  window.form = form
+  window.postMessage({
+    messageType: 'SET_PURCHASE_NUM',
+    form
+  }, '*');
+  // 放在页面不好看，执行完后移除掉
+  scriptTag.onload = function() {
+    this.parentNode.removeChild(this);
+  };
 }

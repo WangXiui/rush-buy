@@ -17,7 +17,6 @@ const {
   version
 } = require('./package.json')
 const path = require('path')
-
 const config = {
   mode: process.env.NODE_ENV,
   // context为上下文路径
@@ -28,6 +27,7 @@ const config = {
     background: './background.js',
     'popup/content': './popup/content.js',
     'js/inject': './js/inject.js',
+    'js/setPurchaseNum': './js/setPurchaseNum.js',
     // 注意左侧不仅为output输出文件名，还包含了文件输出路径
     'popup/popup': './popup/popup.js',
   },
@@ -87,7 +87,6 @@ const config = {
           esModule: false
         }
       }
-
     ]
   },
   plugins: [
@@ -122,11 +121,9 @@ const config = {
           transform: (content) => {
             const jsonContent = JSON.parse(content)
             jsonContent.version = version
-
             if (config.mode === 'development') {
               jsonContent['content_security_policy'] = "script-src 'self' 'unsafe-eval'; object-src 'self'";
             }
-
             return JSON.stringify(jsonContent, null, 2)
           }
         }
@@ -134,7 +131,6 @@ const config = {
     })
   ]
 }
-
 if (config.mode === 'production') {
   config.plugins = (config.plugins || []).concat([
     new webpack.DefinePlugin({
@@ -144,7 +140,6 @@ if (config.mode === 'production') {
     })
   ])
 }
-
 /*if (process.env.HMR === 'true') {
  config.plugins = (config.plugins || []).concat([
  new ExtensionReloader({
@@ -152,11 +147,9 @@ if (config.mode === 'production') {
  })
  ])
  }*/
-
 function transformHtml (content) {
   return ejs.render(content.toString(), {
     ...process.env
   })
 }
-
 module.exports = config

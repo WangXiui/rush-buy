@@ -5,44 +5,45 @@
  * @description：setPurchaseNum
  * @update: 2021/11/5 9:47
  */
-const cartDetail = document.getElementsByClassName('cart-detail')[0] || {}
-console.log('cartDetail---1', cartDetail.__vue__.$el.__vue__.purchasenum);
-console.log('_isMounted', cartDetail.__vue__.$el.__vue__._isMounted);
+const cartDetail = document.querySelector('.cart-detail') || {}
 
-// console.log('window.form', window.form);
+console.log('window.form', window.form);
 
-if (cartDetail.__vue__.$el.__vue__._isMounted) {
-  cartDetail.__vue__.$el.__vue__.purchasenum = 32
-  console.log('cartDetail---2', cartDetail.__vue__.$el.__vue__.purchasenum);
-}
+const input = document.querySelector('.buy-info .el-input__inner')
 
-/*window.onload = function () {
-  if (cartDetail.__vue__.$el.__vue__._isMounted) {
-    cartDetail.__vue__.$el.__vue__.purchasenum = 32
-    console.log('cartDetail---2', cartDetail.__vue__.$el.__vue__.purchasenum);
-  }
-}*/
+const ev = new Event('change', { bubbles: true});
+ev.simulated = true;
+input.value = `${window.form.count}`;
+input.dispatchEvent(ev);
+
+/*setTimeout(() => {
+
+  /!*cartDetail.__vue__.pageData = Object.assign(
+    {},
+    cartDetail.__vue__.pageData,
+    {
+      purchasenum: window.form.count,
+
+      // 控制最大和最小值
+      purchaseNum: window.form.count,
+      procurement: window.form.count,
+      inputnumbermin: window.form.count,
+      inputnumbermax: window.form.count,
+    }
+  )*!/
+
+  // 第二个自组件就是采购量输入框
+  // cartDetail.__vue__.$children[1].value = window.form.count
+  // cartDetail.__vue__.$children[1].currentValue = window.form.count
+  // cartDetail.__vue__.$children[1].displayValue = window.form.count
 
 
-window.addEventListener("message", (event) => {
+  const input = document.querySelector('.buy-info .el-input__inner')
 
-  console.log('event---', event, event.data);
-  const {messageType, form} = event.data
+  const ev = new Event('change', { bubbles: true});
+  ev.simulated = true;
+  input.value = `${window.form.count}`;
+  input.dispatchEvent(ev);
 
-  if (cartDetail.__vue__.$el.__vue__._isMounted) {
-    document.getElementsByClassName('cart-detail')[0].__vue__.$el.__vue__.purchasenum = 32
-    console.log('cartDetail----333', cartDetail.__vue__.$el.__vue__.purchasenum);
-  }
-
-  if(
-    messageType === 'SET_PURCHASE_NUM'  // 确认是设置采购量
-    && form // 确认传参已拿到
-    && cartDetail // 确认指定页面元素已经获取到
-  ) {
-    // 修改采购量的变量值
-    cartDetail.__vue__.$el.__vue__.purchasenum = form.count
-    console.log('cartDetail----444', cartDetail.__vue__.$el.__vue__.purchasenum);
-  }
-
- }, false);
+}, 500)*/
 

@@ -42,14 +42,15 @@ let timerInput
  */
 function editInputValue(form) {
   const input = doc.querySelector('.buy-info .el-input__inner')
+  const increase = doc.querySelector('.el-input-number__increase')
   console.log('自动填充抢够数量', input, input.value);
   if (input) {
+    console.log('自动填充抢够数量--');
     setPurchaseNum(form)
-    // input.value = form.count || '1'
-    console.log('form.count', typeof form.count, form.count);
-    console.log('input.value', input.value);
     // alert('input')
+    // 触发按钮点击时事件
     clickBtn(form)
+
     clearInterval(timerInput)
     timerInput = null
     return
@@ -62,24 +63,29 @@ let timerClick
  * 触发按钮点击时事件
  */
 function clickBtn(form) {
-  const ele = doc.getElementsByClassName('product-purchase-btn')
-  console.log('触发按钮点击时事件', ele.length > 0);
-  if (ele.length > 0) {
+  const ele = doc.querySelector('.product-purchase-btn')
+  console.log('触发按钮点击时事件', ele, form);
+  if (ele) {
     // alert('ele')
     // 方案一（成功）
     // ele[0].click()
     // 方案二（成功）
     const e = document.createEvent("MouseEvents");
     e.initEvent("click", true, true);
-    ele[0].dispatchEvent(e);
+    ele.dispatchEvent(e);
+
+    // 确认库存
+    confirmCount(form)
+
     clearInterval(timerClick)
     timerClick = null
-    confirmCount(form)
     return
   }
   if (timerClick) return;
-  timerClick = setInterval(clickBtn, (1000 / form.frequency) || 100)
+  timerClick = setInterval(clickBtn, 100)
+  // timerClick = setInterval(clickBtn, (1000 / form.frequency) || 100)
 }
+
 let timerConfirm
 /**
  * 确认库存
@@ -89,7 +95,7 @@ function confirmCount(form) {
   const affirmBtn = doc.querySelector('.el-message-box__btns button:first-child')
   // 确认按钮
   // const ele = doc.querySelector('.btn-affirm')
-  console.log('确认库存', affirmBtn);
+  console.log('确认库存', affirmBtn, form);
   if (affirmBtn) {
     // alert('ele')
     // 方案一（成功）
@@ -98,13 +104,16 @@ function confirmCount(form) {
     const event = document.createEvent("MouseEvents");
     event.initEvent("click", true, true);
     affirmBtn.dispatchEvent(event);
+
     sendRushSuccess(affirmBtn)
+
     clearInterval(timerConfirm)
     timerConfirm = null
     return
   }
   if (timerConfirm) return;
-  timerConfirm = setInterval(confirmCount, (1000 / form.frequency) || 100)
+  timerConfirm = setInterval(confirmCount, 100)
+  // timerConfirm = setInterval(confirmCount, (1000 / form.frequency) || 100)
 }
 /**
  * 通知插件抢购成功
@@ -167,9 +176,10 @@ function injectJs(sendResponse) {
  * 设置采购量
  */
 function setPurchaseNum(form) {
+  setPurchaseNumCode(form)
   let scriptTag = document.createElement('script');
   scriptTag.src = chrome.extension.getURL('js/setPurchaseNum.js');
-  (document.head || document.documentElement).appendChild(scriptTag);
+  (document.body || document.documentElement).appendChild(scriptTag);
   window.form = form
   window.postMessage({
     messageType: 'SET_PURCHASE_NUM',
@@ -177,6 +187,19 @@ function setPurchaseNum(form) {
   }, '*');
   // 放在页面不好看，执行完后移除掉
   scriptTag.onload = function() {
+    this.parentNode.removeChild(this);
+  };
+}
+
+/**
+ * 注入js代码片段，传递form表单到页面内
+ * @param form
+ */
+function setPurchaseNumCode(form) {
+  let script = document.createElement('script');
+  script.textContent = `window.form = ${JSON.stringify(form)}`;
+  (document.body||document.documentElement).appendChild(script);
+  script.onload = function() {
     this.parentNode.removeChild(this);
   };
 }

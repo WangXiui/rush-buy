@@ -42,7 +42,8 @@ let timerInput
  */
 function editInputValue(form) {
   const input = doc.querySelector('.buy-info .el-input__inner')
-  const increase = doc.querySelector('.el-input-number__increase')
+  // 加号➕
+  // const increase = doc.querySelector('.el-input-number__increase')
   console.log('自动填充抢够数量', input, input.value);
   if (input) {
     console.log('自动填充抢够数量--');

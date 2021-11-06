@@ -49,8 +49,10 @@ function editInputValue(form) {
     console.log('自动填充抢够数量--');
     setPurchaseNum(form)
     // alert('input')
-    // 触发按钮点击时事件
-    clickBtn(form)
+    // 触发按钮点击时事件,延迟点击等待采购量设置完成
+    setTimeout(() => {
+      clickBtn(form)
+    }, 1000)
 
     clearInterval(timerInput)
     timerInput = null

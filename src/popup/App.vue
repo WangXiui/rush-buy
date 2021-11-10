@@ -6,20 +6,20 @@
       <el-alert class="mb16" title="保存设置后请不要在操作当前浏览器！如果弹窗被关闭，请刷新当前页面，然后点击关闭插件，重新设置一次即可！" type="warning" show-icon></el-alert>
       <!--表单-->
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item prop="deadline">
+        <!--<el-form-item prop="deadline">
           <div class="inline-block" slot="label">
             <span>抢购时间</span>
             <el-tooltip effect="dark" content="不需要选择，自动从页面获取。" placement="top">
               <i class="el-icon-info"></i>
             </el-tooltip>
           </div>
-          <!--<el-time-select
+          &lt;!&ndash;<el-time-select
               class="w-10/10"
               size="mini"
               v-model="form.deadline"
               :picker-options="{start: '08:00',step: '01:00',end: '18:00'}"
               placeholder="请选择时间">
-          </el-time-select>-->
+          </el-time-select>&ndash;&gt;
           <el-time-picker
             disabled
             class="w-10/10"
@@ -29,7 +29,7 @@
             :picker-options="{selectableRange: '00:00:00 - 23:59:59'}"
             placeholder="请选择时间">
           </el-time-picker>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item prop="count">
           <div class="inline-block" slot="label">
             <span>抢购数量</span>
@@ -54,12 +54,12 @@
         <el-button class="w-10/10" type="primary" round @click="handleSetting">保存设置</el-button>
       </div>
       <!--倒计时-->
-      <div class="tac flex justify-center items-center mt16" v-if="countDown">
+      <!--<div class="tac flex justify-center items-center mt16" v-if="countDown">
         <div v-for="(item, index) in countDown.split(':')" :key="index">
           <span class="mx4 align-middle" v-if="index > 0">:</span>
           <el-tag class="f20 align-middle py2 px4 inline-block h-auto" >{{item}}</el-tag>
         </div>
-      </div>
+      </div>-->
       <!--抢购成功-->
       <el-alert class="mt16" title="抢购成功！" type="success" show-icon v-if="isSuccess"></el-alert>
     </div>

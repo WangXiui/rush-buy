@@ -41,6 +41,10 @@ setTimeout(() => {
   input.max = `${window.form.count}`;
   input.min = `${window.form.count}`;
   input.dispatchEvent(ev);
+  window.dispatchEvent(new CustomEvent("setComplete", {
+      detail: {setComplete: true}
+    }
+  ))
 
 }, 500)
 

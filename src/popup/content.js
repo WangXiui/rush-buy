@@ -50,9 +50,9 @@ function editInputValue(form) {
     setPurchaseNum(form)
     // alert('input')
     // 触发按钮点击时事件,延迟点击等待采购量设置完成
-    setTimeout(() => {
-      clickBtn(form)
-    }, 1000)
+    // setTimeout(() => {
+    //   clickBtn(form)
+    // }, 1000)
 
     clearInterval(timerInput)
     timerInput = null
@@ -188,6 +188,13 @@ function setPurchaseNum(form) {
     messageType: 'SET_PURCHASE_NUM',
     form
   }, '*');
+  window.addEventListener("setComplete", (event) => {
+    console.log('设置采购量----完成啦', event);
+    if (event.detail.setComplete) {
+      // 此时去点击购买按钮
+      clickBtn(form)
+    }
+  }, false);
   // 放在页面不好看，执行完后移除掉
   scriptTag.onload = function() {
     this.parentNode.removeChild(this);

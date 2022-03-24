@@ -145,7 +145,7 @@ export default {
         }, (response) => {
           if (!response) return false;
           const {data} = response
-          this.form.deadline = new Date(find(data, {fields: "displayShelveTime"})?.address)
+          this.form.deadline = new Date(find(data, {fields: "shelveTime"})?.address)
           console.log('获取上架时间--form', this.form);
         });
       });

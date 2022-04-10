@@ -3,10 +3,11 @@ window.rushObj = {}
 chrome.webNavigation.onCommitted.addListener(({tabId, frameId}) => {
   const {rushObj} = window
   if (
-    // 1.tabId相等；2.frameId === 0为当前页；3.倒计时已经结束
+    // 1.tabId相等；2.frameId === 0为当前页；
+    // 3.倒计时已经结束（因为插件倒计时开始后和页面倒计时有几秒的差距，会导致实际可以抢了，但插件还没开始。）（靠人为来控制1min内开始抢购）
     tabId === rushObj.tabId &&
-    frameId === 0 &&
-    true === rushObj.isTimeUp
+    frameId === 0
+    // && true === rushObj.isTimeUp
   ) {
     const views = chrome.extension.getViews({ type: 'popup' });
     console.log('views', views); // popup 的 Window 对象

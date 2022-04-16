@@ -114,9 +114,9 @@ let timerConfirm
  */
 function confirmCount(form) {
   // 取消按钮（测试用）
-  const affirmBtn = doc.querySelector('.el-message-box__btns button:first-child')
+  // const affirmBtn = doc.querySelector('.el-message-box__btns button:first-child')
   // 确认按钮
-  // const affirmBtn = doc.querySelector('.btn-affirm')
+  const affirmBtn = doc.querySelector('.btn-affirm')
   console.log('确认库存', affirmBtn, form);
   if (affirmBtn) {
     // alert('ele')

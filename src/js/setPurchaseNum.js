@@ -9,7 +9,7 @@ const cartDetail = document.querySelector('.cart-detail') || {}
 const input = document.querySelector('.buy-info .el-input__inner')
 const loadingVar = document.querySelector('#app>div').__vue__.loading
 
-console.log('window.form', window.form);
+console.log(`准备设置抢购数量：先看下window.form：`, window.form);
 
 setTimeout(() => {
 

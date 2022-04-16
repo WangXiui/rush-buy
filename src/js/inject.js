@@ -7,11 +7,11 @@
  */
 const tableInstance = document.getElementsByClassName('el-table')[0] || {}
 console.log('instance.data', tableInstance.__vue__);
-if(tableInstance) {
+if (tableInstance) {
   // 方案一
-  /*window.dispatchEvent(new CustomEvent("getChromeData", {
-   detail: instance.__vue__.data
-   }))*/
+  window.dispatchEvent(new CustomEvent("getChromeData", {
+    detail: tableInstance.__vue__.data
+  }))
   // 方案二
-  window.postMessage({detailData: tableInstance.__vue__.data }, '*');
+  // window.postMessage({detailData: tableInstance.__vue__.data }, '*');
 }

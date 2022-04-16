@@ -314,6 +314,7 @@ export default {
           sendResponse('我是后台，我已收到你的消息。');
           this.showNotification()
         }
+        return true
       });
     },
     /**

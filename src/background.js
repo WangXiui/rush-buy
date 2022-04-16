@@ -25,6 +25,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log('收到来自content-script：获取form的消息：', request);
     sendResponse({ form: window.rushObj.form });
   }
+  return true
 });
 
 
